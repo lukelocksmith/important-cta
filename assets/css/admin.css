@@ -1,0 +1,79 @@
+/* ── Important CTA — admin styles ──────────────────────── */
+
+.icta-wrap h1 { display: flex; align-items: center; gap: 10px; }
+.icta-version { font-size: 13px; color: #888; font-weight: 400; background: #f0f0f0; padding: 2px 8px; border-radius: 10px; }
+.icta-desc    { color: #666; margin-bottom: 20px; }
+
+.icta-tabs    { margin-bottom: 0 !important; }
+
+.icta-tab-panel { display: none; }
+.icta-tab-panel.is-active { display: block; }
+
+.icta-block {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin: 20px 0;
+  overflow: hidden;
+}
+.icta-block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  background: #f9f9f9;
+  border-bottom: 1px solid #e0e0e0;
+}
+.icta-block-header h2 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+.icta-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #555;
+}
+.icta-block-fields {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.icta-row { display: flex; flex-direction: column; gap: 4px; }
+.icta-row label { font-size: 12px; font-weight: 600; color: #555; text-transform: uppercase; letter-spacing: .04em; }
+.icta-row label small { text-transform: none; font-weight: 400; color: #888; }
+.icta-row input[type="text"],
+.icta-row input[type="url"],
+.icta-row textarea {
+  width: 100%;
+  max-width: 600px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 7px 10px;
+  font-size: 13px;
+}
+.icta-row textarea { resize: vertical; }
+
+.icta-row--half {
+  flex-direction: row;
+  gap: 16px;
+}
+.icta-row--half > div {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.icta-row--colors {
+  flex-direction: row;
+  gap: 24px;
+}
+.icta-row--colors > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
