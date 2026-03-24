@@ -114,6 +114,105 @@
   margin-top: 4px;
 }
 
+/* ── Fluent Forms inside CTA blocks (dark bg) ────────── */
+.icta-block .ff-el-form-control {
+  background: rgba(255, 255, 255, .1);
+  border: 1px solid rgba(255, 255, 255, .2);
+  border-radius: 8px;
+  color: #fff;
+  padding: 12px 16px;
+  font-size: 15px;
+  transition: border-color .2s, background .2s;
+}
+.icta-block .ff-el-form-control::placeholder {
+  color: rgba(255, 255, 255, .45);
+}
+.icta-block .ff-el-form-control:focus {
+  background: rgba(255, 255, 255, .15);
+  border-color: rgba(255, 255, 255, .4);
+  outline: none;
+}
+.icta-block .ff-el-input--label {
+  display: none;
+}
+.icta-block .ff-el-group {
+  margin-bottom: 10px;
+}
+/* Inline layout: fields side by side on desktop */
+.icta-block .fluent_form_4,
+.icta-block .frm-fluent-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.icta-block .fluent_form_4 fieldset {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.icta-block .fluent_form_4 .ff-el-group {
+  flex: 1;
+  min-width: 140px;
+  margin-bottom: 0;
+}
+.icta-block .ff_submit_btn_wrapper {
+  flex: 0 0 auto;
+  margin-bottom: 0;
+}
+.icta-block .ff-btn-submit {
+  background: #e22007 !important;
+  color: #fff !important;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity .15s, transform .1s;
+  white-space: nowrap;
+}
+.icta-block .ff-btn-submit:hover {
+  opacity: .87;
+  transform: translateY(-1px);
+}
+/* Success message inside dark CTA */
+.icta-block .ff-message-success {
+  color: #fff;
+  background: rgba(255, 255, 255, .1);
+  border-radius: 8px;
+  padding: 16px;
+  border: none;
+}
+/* Gate form — same dark styles */
+.icta-gate .ff-el-form-control {
+  background: rgba(255, 255, 255, .1);
+  border: 1px solid rgba(255, 255, 255, .2);
+  border-radius: 8px;
+  color: #fff;
+  padding: 12px 16px;
+  font-size: 15px;
+}
+.icta-gate .ff-el-form-control::placeholder {
+  color: rgba(255, 255, 255, .45);
+}
+.icta-gate .ff-el-form-control:focus {
+  background: rgba(255, 255, 255, .15);
+  border-color: rgba(255, 255, 255, .4);
+  outline: none;
+}
+.icta-gate .ff-el-input--label { display: none; }
+.icta-gate .ff-btn-submit {
+  background: #e22007 !important;
+  color: #fff !important;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+}
+
 /* ── Shared button ────────────────────────────────────── */
 .icta-btn {
   display: inline-block;
