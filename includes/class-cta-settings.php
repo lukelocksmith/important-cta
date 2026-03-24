@@ -44,7 +44,7 @@ class ICTA_Settings {
 
             // Determine position from key suffix
             $pos = null;
-            foreach (['cta1', 'cta2', 'cta3'] as $p) {
+            foreach (['cta1', 'cta2', 'cta3', 'gate'] as $p) {
                 if (str_ends_with($key, "_{$p}")) { $pos = $p; break; }
             }
             if (!$pos) continue;
@@ -115,6 +115,21 @@ class ICTA_Settings {
                 'image_url'   => '',
                 'shortcode'   => '[fluentform id="4"]',
                 'h2_trigger'  => 0,
+            ],
+            'gate' => [
+                'enabled'     => false,
+                'label'       => 'Treść premium',
+                'headline'    => 'Czytaj dalej — za darmo',
+                'subheadline' => 'Zostaw email, a reszta artykułu odblokuje się natychmiast.',
+                'desc'        => '',
+                'btn_text'    => '',
+                'btn_url'     => '',
+                'bg_color'    => '#18181b',
+                'btn_color'   => '#e22007',
+                'text_color'  => '#ffffff',
+                'image_url'   => '',
+                'shortcode'   => '[fluentform id="4"]',
+                'h2_trigger'  => 3,
             ],
         ];
         return $defaults[$pos] ?? [];
@@ -196,6 +211,14 @@ class ICTA_Settings {
                 'has_desc'      => false,
                 'has_shortcode' => true,
                 'has_trigger'   => false,
+            ],
+            'gate' => [
+                'label'         => 'Content Gate',
+                'desc'          => 'Ukrywa treść od wybranego H2 — czytelnik podaje email, żeby odblokować. Można też włączyć per-artykuł checkboxem.',
+                'has_image'     => false,
+                'has_desc'      => false,
+                'has_shortcode' => true,
+                'has_trigger'   => true,
             ],
         ];
 
