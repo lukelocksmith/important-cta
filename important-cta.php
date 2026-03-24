@@ -1,9 +1,9 @@
 <?php
 /**
  * Plugin Name:       Blog Lead Magnet
- * Plugin URI:        https://github.com/lukasz-important/important-cta
+ * Plugin URI:        https://github.com/lukelocksmith/important-cta
  * Description:       Auto-injects configurable CTA & lead magnet blocks into blog posts — per category, 3 positions.
- * Version:           2.0.0
+ * Version:           2.0.1
  * Requires at least: 6.0
  * Requires PHP:      8.0
  * Author:            Łukasz Ślusarski
@@ -14,7 +14,7 @@
 
 defined('ABSPATH') || exit;
 
-define('ICTA_VERSION', '2.0.0');
+define('ICTA_VERSION', '2.0.1');
 define('ICTA_DIR',     plugin_dir_path(__FILE__));
 define('ICTA_URL',     plugin_dir_url(__FILE__));
 
@@ -22,7 +22,7 @@ define('ICTA_URL',     plugin_dir_url(__FILE__));
 require_once ICTA_DIR . 'vendor/plugin-update-checker/plugin-update-checker.php';
 use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 $updater = PucFactory::buildUpdateChecker(
-    'https://github.com/lukasz-important/important-cta/',
+    'https://github.com/lukelocksmith/important-cta/',
     __FILE__,
     'important-cta'
 );
