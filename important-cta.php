@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name:       Important CTA
+ * Plugin Name:       Blog Lead Magnet
  * Plugin URI:        https://github.com/lukasz-important/important-cta
- * Description:       Auto-injects configurable CTA blocks into blog posts — per category, 3 positions.
- * Version:           1.0.0
+ * Description:       Auto-injects configurable CTA & lead magnet blocks into blog posts — per category, 3 positions.
+ * Version:           2.0.0
  * Requires at least: 6.0
  * Requires PHP:      8.0
  * Author:            Łukasz Ślusarski
@@ -14,7 +14,7 @@
 
 defined('ABSPATH') || exit;
 
-define('ICTA_VERSION', '1.0.0');
+define('ICTA_VERSION', '2.0.0');
 define('ICTA_DIR',     plugin_dir_path(__FILE__));
 define('ICTA_URL',     plugin_dir_url(__FILE__));
 

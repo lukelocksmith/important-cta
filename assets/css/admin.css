@@ -23,12 +23,12 @@
   padding: 14px 20px;
   background: #f9f9f9;
   border-bottom: 1px solid #e0e0e0;
+  gap: 12px;
 }
-.icta-block-header h2 {
-  margin: 0;
-  font-size: 14px;
-  font-weight: 600;
-}
+.icta-block-header > div { display: flex; flex-direction: column; gap: 2px; }
+.icta-block-header h2 { margin: 0; font-size: 14px; font-weight: 600; }
+.icta-block-desc { font-size: 12px; color: #888; }
+
 .icta-toggle {
   display: flex;
   align-items: center;
@@ -36,6 +36,8 @@
   cursor: pointer;
   font-size: 13px;
   color: #555;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 .icta-block-fields {
   padding: 20px;
@@ -58,6 +60,14 @@
 }
 .icta-row textarea { resize: vertical; }
 
+.icta-row--trigger input[type="number"] {
+  width: 80px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 7px 10px;
+  font-size: 13px;
+}
+
 .icta-row--half {
   flex-direction: row;
   gap: 16px;
@@ -71,9 +81,39 @@
 .icta-row--colors {
   flex-direction: row;
   gap: 24px;
+  flex-wrap: wrap;
 }
 .icta-row--colors > div {
   display: flex;
   flex-direction: column;
   gap: 4px;
+}
+
+/* ── Media picker ─────────────────────────────────────── */
+.icta-media-group {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  max-width: 600px;
+}
+.icta-img-preview {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 1px solid #ddd;
+  flex-shrink: 0;
+}
+.icta-media-inputs {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.icta-media-inputs .icta-img-url {
+  max-width: 100%;
+}
+.icta-media-btn {
+  align-self: flex-start;
+  font-size: 12px !important;
 }
