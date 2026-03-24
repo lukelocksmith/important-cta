@@ -35,12 +35,14 @@ require_once ICTA_DIR . 'includes/class-cta-injector.php';
 require_once ICTA_DIR . 'includes/class-content-gate.php';
 require_once ICTA_DIR . 'includes/class-analytics.php';
 require_once ICTA_DIR . 'includes/class-floating-bar.php';
+require_once ICTA_DIR . 'includes/class-related-posts.php';
 
 new ICTA_Settings();
 new ICTA_Injector();
 new ICTA_Content_Gate();
 new ICTA_Analytics();
 new ICTA_Floating_Bar();
+new ICTA_Related_Posts();
 
 // DB table creation on activation
 register_activation_hook(__FILE__, ['ICTA_Analytics', 'create_table']);
