@@ -2,8 +2,8 @@
 /**
  * Plugin Name:       Blog Lead Magnet
  * Plugin URI:        https://github.com/lukelocksmith/important-cta
- * Description:       CTA blocks, content gate (email paywall) & analytics for WordPress blog posts.
- * Version:           3.0.0
+ * Description:       CTA blocks, content gate, floating bar (TOC + CTA) & analytics for WordPress blog posts.
+ * Version:           3.1.0
  * Requires at least: 6.0
  * Requires PHP:      8.0
  * Author:            Łukasz Ślusarski
@@ -14,7 +14,7 @@
 
 defined('ABSPATH') || exit;
 
-define('ICTA_VERSION', '3.0.0');
+define('ICTA_VERSION', '3.1.0');
 define('ICTA_DIR',     plugin_dir_path(__FILE__));
 define('ICTA_URL',     plugin_dir_url(__FILE__));
 
@@ -34,11 +34,13 @@ require_once ICTA_DIR . 'includes/class-cta-settings.php';
 require_once ICTA_DIR . 'includes/class-cta-injector.php';
 require_once ICTA_DIR . 'includes/class-content-gate.php';
 require_once ICTA_DIR . 'includes/class-analytics.php';
+require_once ICTA_DIR . 'includes/class-floating-bar.php';
 
 new ICTA_Settings();
 new ICTA_Injector();
 new ICTA_Content_Gate();
 new ICTA_Analytics();
+new ICTA_Floating_Bar();
 
 // DB table creation on activation
 register_activation_hook(__FILE__, ['ICTA_Analytics', 'create_table']);

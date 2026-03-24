@@ -1,0 +1,221 @@
+/* ── BLM Floating Bar ────────────────────────────── */
+
+.blm-float {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9000;
+  pointer-events: none;
+}
+
+.blm-float__bar {
+  pointer-events: auto;
+  border-top: 1px solid rgba(0, 0, 0, .08);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, .06);
+}
+
+.blm-float__inner {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ── Expert / CTA section ─────────────────────── */
+.blm-float__expert {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.blm-float__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  background: #374151;
+}
+.blm-float__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.blm-float__info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.blm-float__name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #111;
+  line-height: 1.2;
+}
+.blm-float__role {
+  font-size: 11px;
+  color: #6b7280;
+  line-height: 1.2;
+}
+
+.blm-float__btn {
+  display: inline-block;
+  color: #fff !important;
+  text-decoration: none !important;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 8px;
+  white-space: nowrap;
+  transition: opacity .15s;
+  flex-shrink: 0;
+}
+.blm-float__btn:hover {
+  opacity: .87;
+}
+
+/* ── Separator ────────────────────────────────── */
+.blm-float__sep {
+  width: 1px;
+  height: 28px;
+  background: rgba(0, 0, 0, .1);
+  flex-shrink: 0;
+}
+
+/* ── TOC area ─────────────────────────────────── */
+.blm-float__toc-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  position: relative;
+}
+
+.blm-float__panel {
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+  width: 320px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .3s ease, opacity .2s ease;
+  opacity: 0;
+  background: inherit;
+  border-radius: 12px 12px 0 0;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, .08);
+}
+
+.blm-float[aria-expanded="true"] .blm-float__panel {
+  max-height: 400px;
+  opacity: 1;
+}
+
+.blm-float__panel-inner {
+  padding: 16px 20px;
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.blm-float__toc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.blm-float__toc-list li {
+  margin: 0;
+}
+.blm-float__toc-list li.toc-sub {
+  padding-left: 16px;
+}
+.blm-float__toc-list a {
+  display: block;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #374151;
+  text-decoration: none;
+  transition: background .15s, color .15s;
+  line-height: 1.4;
+}
+.blm-float__toc-list a:hover {
+  background: rgba(0, 0, 0, .04);
+}
+.blm-float__toc-list a.active {
+  background: rgba(0, 0, 0, .06);
+  font-weight: 600;
+  color: #111;
+}
+
+/* ── TOC toggle button ────────────────────────── */
+.blm-float__toc-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: background .15s;
+}
+.blm-float__toc-toggle:hover {
+  background: rgba(0, 0, 0, .04);
+}
+
+.blm-float__toc-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
+}
+.blm-float__toc-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: #9ca3af;
+}
+.blm-float__toc-active {
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: right;
+}
+
+.blm-float__chevron {
+  width: 16px;
+  height: 16px;
+  color: #9ca3af;
+  transition: transform .2s;
+  flex-shrink: 0;
+}
+.blm-float[aria-expanded="true"] .blm-float__chevron {
+  transform: rotate(180deg);
+}
+
+/* ── Mobile ──────────────────────────────────── */
+@media (max-width: 767px) {
+  .blm-float__info { display: none; }
+  .blm-float__sep { margin: 0 4px; height: 24px; }
+  .blm-float__inner { padding: 8px 16px; }
+  .blm-float__panel { width: 280px; }
+  .blm-float__toc-active { max-width: 120px; }
+}
