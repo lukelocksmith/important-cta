@@ -11,12 +11,15 @@ class ICTA_Floating_Bar {
         add_action('admin_enqueue_scripts', [$this, 'enqueue_admin']);
         add_action('wp_footer', [$this, 'render'], 50);
         add_action('wp_enqueue_scripts', [$this, 'enqueue_assets']);
+        // Server-side TOC injected into content for SEO
+        add_filter('the_content', [$this, 'inject_toc'], 5);
     }
 
     public static function defaults(): array {
         return [
             'enabled'       => false,
             'mode'          => 'both',       // 'both', 'cta_only', 'toc_only'
+            'progress_bar'  => true,
             'btn_text'      => 'Umów się',
             'btn_url'       => 'https://cal.com/%C5%82ukasz-important/30min',
             'author_name'   => 'Łukasz Ślusarski',
@@ -24,6 +27,7 @@ class ICTA_Floating_Bar {
             'author_avatar' => '',
             'bar_bg'        => '#ffffff',
             'btn_color'     => '#2563eb',
+            'progress_color'=> '#e22007',
         ];
     }
 
@@ -60,15 +64,17 @@ class ICTA_Floating_Bar {
     public function sanitize(array $input): array {
         $modes = ['both', 'cta_only', 'toc_only'];
         return [
-            'enabled'       => !empty($input['enabled']),
-            'mode'          => in_array($input['mode'] ?? '', $modes, true) ? $input['mode'] : 'both',
-            'btn_text'      => sanitize_text_field($input['btn_text'] ?? ''),
-            'btn_url'       => esc_url_raw($input['btn_url'] ?? ''),
-            'author_name'   => sanitize_text_field($input['author_name'] ?? ''),
-            'author_role'   => sanitize_text_field($input['author_role'] ?? ''),
-            'author_avatar' => esc_url_raw($input['author_avatar'] ?? ''),
-            'bar_bg'        => sanitize_hex_color($input['bar_bg'] ?? '') ?: '#ffffff',
-            'btn_color'     => sanitize_hex_color($input['btn_color'] ?? '') ?: '#2563eb',
+            'enabled'        => !empty($input['enabled']),
+            'mode'           => in_array($input['mode'] ?? '', $modes, true) ? $input['mode'] : 'both',
+            'progress_bar'   => !empty($input['progress_bar']),
+            'btn_text'       => sanitize_text_field($input['btn_text'] ?? ''),
+            'btn_url'        => esc_url_raw($input['btn_url'] ?? ''),
+            'author_name'    => sanitize_text_field($input['author_name'] ?? ''),
+            'author_role'    => sanitize_text_field($input['author_role'] ?? ''),
+            'author_avatar'  => esc_url_raw($input['author_avatar'] ?? ''),
+            'bar_bg'         => sanitize_hex_color($input['bar_bg'] ?? '') ?: '#ffffff',
+            'btn_color'      => sanitize_hex_color($input['btn_color'] ?? '') ?: '#2563eb',
+            'progress_color' => sanitize_hex_color($input['progress_color'] ?? '') ?: '#e22007',
         ];
     }
 
@@ -78,7 +84,7 @@ class ICTA_Floating_Bar {
         ?>
         <div class="wrap icta-wrap">
             <h1>BLM Pływający pasek <span class="icta-version">v<?= ICTA_VERSION ?></span></h1>
-            <p class="icta-desc">Pasek na dole ekranu z przyciskiem CTA i/lub spisem treści — widoczny na artykułach.</p>
+            <p class="icta-desc">Pasek na dole ekranu z przyciskiem CTA i/lub spisem treści, pasek postępu na górze — widoczny na artykułach.</p>
 
             <form method="post" action="options.php" class="icta-form">
                 <?php settings_fields('icta_floating_group'); ?>
@@ -86,7 +92,7 @@ class ICTA_Floating_Bar {
                 <div class="icta-block">
                     <div class="icta-block-header">
                         <div>
-                            <h2>Konfiguracja</h2>
+                            <h2>Pływający pasek</h2>
                         </div>
                         <label class="icta-toggle">
                             <input type="checkbox" name="<?= $n ?>[enabled]" value="1" <?= checked($d['enabled'], true, false) ?>>
@@ -102,6 +108,13 @@ class ICTA_Floating_Bar {
                                 <option value="cta_only" <?= selected($d['mode'], 'cta_only', false) ?>>Tylko przycisk CTA</option>
                                 <option value="toc_only" <?= selected($d['mode'], 'toc_only', false) ?>>Tylko Spis treści</option>
                             </select>
+                        </div>
+
+                        <div class="icta-row">
+                            <label class="icta-toggle" style="flex-direction:row-reverse;justify-content:flex-end">
+                                <span>Pasek postępu czytania (na górze strony)</span>
+                                <input type="checkbox" name="<?= $n ?>[progress_bar]" value="1" <?= checked($d['progress_bar'], true, false) ?>>
+                            </label>
                         </div>
 
                         <div class="icta-row icta-row--half">
@@ -150,6 +163,10 @@ class ICTA_Floating_Bar {
                                 <label>Kolor przycisku</label>
                                 <input type="text" name="<?= $n ?>[btn_color]" value="<?= esc_attr($d['btn_color']) ?>" class="icta-color-picker">
                             </div>
+                            <div>
+                                <label>Kolor paska postępu</label>
+                                <input type="text" name="<?= $n ?>[progress_color]" value="<?= esc_attr($d['progress_color']) ?>" class="icta-color-picker">
+                            </div>
                         </div>
 
                     </div>
@@ -159,6 +176,69 @@ class ICTA_Floating_Bar {
             </form>
         </div>
         <?php
+    }
+
+    // ── Server-side TOC (SEO) ─────────────────────
+
+    /**
+     * Extract headings from content and inject a hidden <nav> with anchor links.
+     * This runs at priority 5 (before gate & CTA injection) so it processes raw content.
+     * The TOC is in the HTML source for Google/AI crawlers.
+     * JS picks it up for the floating bar drawer.
+     */
+    public function inject_toc(string $content): string {
+        if (!is_singular('post') || is_admin()) return $content;
+
+        $d = self::get();
+        if (!$d['enabled']) return $content;
+        $show_toc = in_array($d['mode'], ['both', 'toc_only'], true);
+        if (!$show_toc) return $content;
+
+        // Extract H2/H3 headings
+        if (!preg_match_all('/<(h[23])[^>]*>(.*?)<\/\1>/is', $content, $matches, PREG_SET_ORDER)) {
+            return $content;
+        }
+
+        if (count($matches) < 2) return $content;
+
+        // Add IDs to headings in content
+        $i = 0;
+        $toc_items = [];
+        $content = preg_replace_callback('/<(h[23])([^>]*)>(.*?)<\/\1>/is', function ($m) use (&$i, &$toc_items) {
+            $tag   = $m[1];
+            $attrs = $m[2];
+            $text  = strip_tags($m[3]);
+            $id    = 'h-' . $i;
+
+            // Don't overwrite existing IDs
+            if (!preg_match('/\bid\s*=/i', $attrs)) {
+                $attrs .= ' id="' . $id . '"';
+            } else {
+                preg_match('/\bid\s*=\s*["\']([^"\']+)/i', $attrs, $id_match);
+                if ($id_match) $id = $id_match[1];
+            }
+
+            $toc_items[] = [
+                'id'    => $id,
+                'text'  => $text,
+                'level' => $tag === 'h3' ? 3 : 2,
+            ];
+
+            $i++;
+            return "<{$tag}{$attrs}>{$m[3]}</{$tag}>";
+        }, $content);
+
+        // Build server-side TOC nav (visible in HTML source for SEO, visually hidden)
+        $toc_html = '<nav class="blm-toc-seo" aria-label="Spis treści" itemscope itemtype="https://schema.org/SiteNavigationElement">';
+        $toc_html .= '<ol>';
+        foreach ($toc_items as $item) {
+            $sub = $item['level'] === 3 ? ' class="toc-sub"' : '';
+            $toc_html .= '<li' . $sub . '><a href="#' . esc_attr($item['id']) . '" itemprop="url"><span itemprop="name">' . esc_html($item['text']) . '</span></a></li>';
+        }
+        $toc_html .= '</ol></nav>';
+
+        // Inject TOC at the top of content (before first paragraph)
+        return $toc_html . $content;
     }
 
     // ── Frontend ──────────────────────────────────
@@ -188,7 +268,14 @@ class ICTA_Floating_Bar {
         foreach ($name_parts as $part) {
             if ($part) $initials .= mb_substr($part, 0, 1);
         }
-        ?>
+
+        // Progress bar
+        if (!empty($d['progress_bar'])) : ?>
+        <div class="blm-progress" id="blm-progress" aria-hidden="true">
+          <div class="blm-progress__bar" id="blm-progress-bar" style="background:<?= esc_attr($d['progress_color']) ?>"></div>
+        </div>
+        <?php endif; ?>
+
         <!-- BLM Floating Bar -->
         <div class="blm-float" id="blm-float" aria-expanded="false" style="<?= $bar_style ?>">
           <div class="blm-float__bar">
@@ -207,7 +294,7 @@ class ICTA_Floating_Bar {
                   <span class="blm-float__name"><?= esc_html($d['author_name']) ?></span>
                   <span class="blm-float__role"><?= esc_html($d['author_role']) ?></span>
                 </div>
-                <a href="<?= esc_url($d['btn_url']) ?>" class="blm-float__btn" style="<?= $btn_style ?>" target="_blank" rel="noopener" onclick="event.stopPropagation()">
+                <a href="<?= esc_url($d['btn_url']) ?>" class="blm-float__btn icta-btn" style="<?= $btn_style ?>" target="_blank" rel="noopener" onclick="event.stopPropagation()">
                   <?= esc_html($d['btn_text']) ?>
                 </a>
               </div>

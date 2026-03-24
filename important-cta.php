@@ -3,7 +3,7 @@
  * Plugin Name:       Blog Lead Magnet
  * Plugin URI:        https://github.com/lukelocksmith/important-cta
  * Description:       CTA blocks, content gate, floating bar (TOC + CTA) & analytics for WordPress blog posts.
- * Version:           3.1.0
+ * Version:           3.2.0
  * Requires at least: 6.0
  * Requires PHP:      8.0
  * Author:            Łukasz Ślusarski
@@ -14,7 +14,7 @@
 
 defined('ABSPATH') || exit;
 
-define('ICTA_VERSION', '3.1.0');
+define('ICTA_VERSION', '3.2.0');
 define('ICTA_DIR',     plugin_dir_path(__FILE__));
 define('ICTA_URL',     plugin_dir_url(__FILE__));
 

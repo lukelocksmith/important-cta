@@ -1,6 +1,20 @@
 (function () {
   'use strict';
 
+  // ── Reading Progress Bar ──────────────────────
+  var progressBar = document.getElementById('blm-progress-bar');
+  if (progressBar) {
+    function updateProgress() {
+      var scrollTop = window.scrollY;
+      var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      var pct = docHeight > 0 ? Math.min(100, Math.round((scrollTop / docHeight) * 100)) : 0;
+      progressBar.style.width = pct + '%';
+    }
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+  }
+
+  // ── Floating Bar TOC ──────────────────────────
   var bar = document.getElementById('blm-float');
   if (!bar) return;
 
@@ -10,7 +24,6 @@
   var tocList   = document.getElementById('blm-toc-list');
   var tocActive = document.getElementById('blm-toc-active');
 
-  // Build TOC from headings
   var headings = content.querySelectorAll('h2, h3');
 
   if (tocList) {
@@ -21,9 +34,9 @@
       if (tocArea) tocArea.style.display = 'none';
       if (sep) sep.style.display = 'none';
     } else {
-      headings.forEach(function (h, i) {
-        // Ensure heading has an ID for anchor links
-        if (!h.id) h.id = 'h-' + i;
+      // Build drawer TOC from existing headings (which already have IDs from server-side PHP)
+      headings.forEach(function (h) {
+        if (!h.id) return; // Skip headings without IDs
 
         var li = document.createElement('li');
         if (h.tagName === 'H3') li.className = 'toc-sub';
@@ -54,7 +67,9 @@
         });
       }, { rootMargin: '-80px 0px -60% 0px', threshold: 0 });
 
-      headings.forEach(function (h) { observer.observe(h); });
+      headings.forEach(function (h) {
+        if (h.id) observer.observe(h);
+      });
 
       // Close panel after clicking a TOC link
       tocList.querySelectorAll('a').forEach(function (link) {
